@@ -14,20 +14,21 @@ import java.util.Date;
 public class WriteImg extends HttpServlet {
 
     private static final String imgDir = "/userImg/";
+    private static final String imgLog = "log.txt";
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        File userPath;
-        String imgB64;
-        String imgName;
-        String imgType;
-        String userGuid;
-        OutputStream out;
-        SimpleDateFormat df;
-        StringBuffer reqUrl;
-        StringBuffer serPath;
-        StringBuffer locPath;
-        BASE64Decoder base64Decoder;
+        File userPath = null;
+        String imgB64 = null;
+        String imgName = null;
+        String imgType = null;
+        String userGuid = null;
+        OutputStream out = null;
+        SimpleDateFormat df = null;
+        StringBuffer reqUrl = null;
+        StringBuffer serPath = null;
+        StringBuffer locPath = null;
+        BASE64Decoder base64Decoder = null;
 
         try {
             request.setCharacterEncoding("utf-8");
@@ -37,7 +38,6 @@ public class WriteImg extends HttpServlet {
             imgType = request.getParameter("imgType");
             userGuid = request.getParameter("userGuid");
 
-
             reqUrl = request.getRequestURL();
             serPath = reqUrl.delete(reqUrl.length() - request.getRequestURI().length(), reqUrl.length())
                     .append(request.getContextPath())
@@ -46,14 +46,12 @@ public class WriteImg extends HttpServlet {
 
             locPath = new StringBuffer();
             locPath.append(request.getServletContext().getRealPath("/"))
-                    .append(imgDir)
-                    .append(userGuid);
+                    .append(imgDir);
 
-            userPath = new File(locPath.toString());
+            userPath = new File(locPath.append(userGuid).toString());
             if (!userPath.exists()) {
                 userPath.mkdirs();
             }
-
 
             base64Decoder = new BASE64Decoder();
             byte[] bytes = base64Decoder.decodeBuffer(imgB64);
@@ -63,7 +61,6 @@ public class WriteImg extends HttpServlet {
                     bytes[i] += 256;
                 }
             }
-
 
             df = new SimpleDateFormat("yyyyMMddHHmmss");
             imgName = df.format(new Date());
@@ -86,7 +83,7 @@ public class WriteImg extends HttpServlet {
         }
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         this.doGet(request, response);
     }
 
