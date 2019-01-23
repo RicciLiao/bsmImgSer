@@ -70,8 +70,7 @@ public class WriteImg extends HttpServlet {
             out.flush();
             out.close();
 
-            serPath.append("/")
-                    .append(imgName + "." + imgType);
+            serPath.append("/").append(imgName + "." + imgType);
 
             response.getWriter().write("{\"success\" : 1,\"message\" : \"\",\"url\" : \"" + serPath + "\"}");
 
